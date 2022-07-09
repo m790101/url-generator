@@ -3,6 +3,10 @@ const exphbs = require("express-handlebars")
 const mongoose = require("mongoose")
 const app = express()
 const Urls = require("./models/url")
+const randomGenerator = require("./randomUrl")
+
+
+
 const db = mongoose.connection
 mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
 
@@ -17,10 +21,11 @@ db.once("open", () => {
 })
 
 
-
+app.use(express.static("public"))
 app.engine('handlebars', exphbs({defaultLayout: 'main'}))
 app.set('view engine', 'handlebars');
 app.use(express.urlencoded({ extended: true }))
+
 
 
 
@@ -29,20 +34,33 @@ app.get("/",(req,res) => {
 })
 
 app.post("/", (req,res) => {
+    const randomUrl = randomGenerator()
     const urlOrigin = req.body.url
-    console.log(req.body.url)
-    Urls.create({
-        urlOrigin:urlOrigin,
-        urlAfter: "abc"
-    })
-    .then(res.redirect("/"))
+
+        Urls.find({'urlOrigin': urlOrigin})
+        .lean().then((item)=> {
+            if(item.length){
+                res.render("index",{randomUrl: item[0].urlAfter})
+            }
+            else{ 
+                Urls.create({
+                urlOrigin: urlOrigin,
+                urlAfter: randomUrl
+            })
+            .then(res.render("index",{randomUrl}))
+            .catch(error => console.log(error))}
+        })
+
 })
 
-app.get("/:simple",(req,res) => {
-    const simple = req.params.simple
-    console.log(req.params.simple)
 
-    return Urls.find({ 'urlAfter': simple })
+
+
+
+app.get("/:shortURL",(req,res) => {
+    const shortURL = req.params.shortURL
+
+    Urls.find({ 'urlAfter': shortURL })
     .lean()
     .then((item) => {
         res.redirect(item[0].urlOrigin)

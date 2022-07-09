@@ -1,6 +1,18 @@
-<form class="d-flex" action="/" method="post">
-  <div class="mx-3">
-    <input type="url" class="form-control" id="url-origin" placeholder="enter url" name="url">
-  </div>
-  <button type="submit" class="btn btn-primary">Submit</button>
+<div class="">
+<form class="d-flex form" action="/" method="POST" novalidate>
+  <div class="mb-3">
+    <input type="url" class="form-controlt" id="url-origin" placeholder="enter url" name="url" required>
+    <div class="invalid-feedback">
+          can not be empty
+    </div>
+    </div>
+    <div>
+      <button type="submit" class="btn btn-primary submit mx-3">Submit</button>
+    </div>
 </form>
+{{#if randomUrl}}
+  <div class="mt-5 alert alert-info " role="alert">
+    <span class="mr-2">Your url is: </span> <code>http://localhost:3000/{{randomUrl}}</code>
+  </div>
+{{/if}}
+</div>

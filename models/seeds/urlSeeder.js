@@ -6,6 +6,6 @@ db.on('error', () => {
   console.log('mongodb error!')
 })
 db.once('open', () => {
-    Url.create()
+    Url.create({urlOrigin:"https://www.youtube.com/",urlAfter:"https://your-project-name.herokuapp.com/123"})
   console.log('mongodb connected!')
 })

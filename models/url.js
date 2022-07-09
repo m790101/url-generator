@@ -5,4 +5,4 @@ const urlSchema = new Schema({
     urlAfter:{type:"String", require: true}
 })
 
-module.exports = mongoose.model(Url,urlSchema)
+module.exports = mongoose.model("Url",urlSchema)
